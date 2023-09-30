@@ -1,6 +1,5 @@
-import pandas as pd
 from DecisionTree.question import Question
-from DecisionTree.utils import greedy_search
+from DecisionTree.utils import *
 from Dataset.dataset import Dataset
 
 
@@ -10,12 +9,17 @@ class Node:
         self.question = None
 
     def select_feature(self):
-        for feature in self.subset.data:
-            if feature.dytpe == 'bool':
-                self.question = Question(feature)
+        for feature in [col for col in self.subset.data.columns if col != self.subset.label]:
+            min_gini = float('inf')
+            if self.subset.data[feature].dtype == 'bool':
+                candidate_question = Question(feature)
             else:
                 threshold = greedy_search(self.subset, feature)
-                self.question = Question(feature, threshold)
+                candidate_question = Question(feature, threshold)
+            true_set, false_set = candidate_question.answer(self.subset)
+            impurity = gini_impurity(self.subset, true_set, false_set)
+            if impurity < min_gini:
+                min_gini, self.question = impurity, candidate_question
 
 
 class Root(Node):
