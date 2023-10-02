@@ -1,31 +1,17 @@
 from DecisionTree.node import *
 
 
-def termination_criteria_met(node: Node, depth, max_depth=None, min_samples=None):
-    # 1. If the node is pure, create a leaf node with the majority class
-    if node.subset.is_pure():
-        return True
-    # 2. If the depth limit is reached, create a leaf node with the majority class
-    if max_depth is not None and depth >= max_depth:
-        return True
-    # 3. If the node has too few samples, create a leaf node with the majority class
-    if min_samples is not None and len(node.subset) <= min_samples:
-        return True
-    # If none of the termination conditions are met, continue splitting
-    return False
-
-
 class DecisionTree:
     def __init__(self, dataset: Dataset):
         self.root = Node(dataset)
 
     def build(self, node, depth=0, max_depth=None, min_samples=None):
-        if termination_criteria_met(node, depth, max_depth, min_samples):
-            return Leaf(node.subset)  # Create a LeafNode with the majority class
+        if isinstance(node, Leaf):
+            return
 
         # Otherwise, select the best feature and threshold and create internal nodes
         node.select_feature()
-        node.split_data()
+        node.split_data(depth, max_depth, min_samples)
 
         # Recursively build the true and false branches
         if node.true_child:
@@ -36,5 +22,18 @@ class DecisionTree:
     def fit(self, max_depth=None, min_samples=None):
         self.build(self.root, max_depth=max_depth, min_samples=min_samples)
 
-    def print(self):
-        pass
+    def print(self, node=None, indent=""):
+        if node is None:
+            node = self.root
+
+        # If it's a leaf node, print the class or value
+        if isinstance(node, Leaf):
+            print(f"{indent}|--- class: {node.predict()}")
+            return
+
+        # If it's an internal node, print the question and recurse
+        print(f"{indent}|--- {node.question}")
+        print(f"{indent}|   |--- True:")
+        self.print(node.true_child, indent + "|   ")
+        print(f"{indent}|   |--- False:")
+        self.print(node.false_child, indent + "|   ")
