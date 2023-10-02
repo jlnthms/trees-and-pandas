@@ -23,10 +23,11 @@ class Question:
             else:
                 false_rows.append(subset.data.iloc[i])
 
-        true_subset = pd.DataFrame(true_rows, columns=subset.data.columns)
-        false_subset = pd.DataFrame(false_rows, columns=subset.data.columns)
+        true_subset = pd.DataFrame(true_rows, columns=subset.data.columns).reset_index(drop=True)
+        false_subset = pd.DataFrame(false_rows, columns=subset.data.columns).reset_index(drop=True)
 
-        return true_subset, false_subset
+        return Dataset(true_subset, subset.label, subset.true_label), \
+               Dataset(false_subset, subset.label, subset.true_label)
 
     def __str__(self):
         return f"Is {self.feature} <= {self.threshold}?"
