@@ -4,6 +4,20 @@ from DecisionTree.question import Question
 from Dataset.dataset import Dataset
 
 
+def termination_criteria_met(split_set: Dataset, depth, max_depth=None, min_samples=None):
+    # 1. If the set is pure
+    if split_set.is_pure():
+        return True
+    # 2. If the depth limit is reached, create a leaf node with the majority class
+    if max_depth is not None and depth + 1 >= max_depth:
+        return True
+    # 3. If the node has too few samples, create a leaf node with the majority class
+    if min_samples is not None and len(split_set) <= min_samples:
+        return True
+    # If none of the termination conditions are met, continue splitting
+    return False
+
+
 def greedy_search(subset: Dataset, feature: str):
     # return the threshold value that splits the set into the purest possible subsets
     lowest_gini, threshold = float('inf'), None
