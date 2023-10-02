@@ -9,7 +9,7 @@ def greedy_search(subset: Dataset, feature: str):
     lowest_gini, threshold = float('inf'), None
     for value in subset.data[feature].unique():
         true_set, false_set = Question(feature, value).answer(subset)
-        gini = gini_impurity(subset, true_set, false_set)
+        gini = gini_impurity(subset, true_set.data, false_set.data)
         if gini < lowest_gini:
             lowest_gini, threshold = gini, value
     return threshold
