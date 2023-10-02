@@ -6,3 +6,11 @@ class Dataset:
         self.data = data
         self.label = label
         self.true_label = true_label
+
+    def __len__(self):
+        # number of rows
+        return len(self.data.index)
+
+    def is_pure(self):
+        unique_labels = self.data[self.label].unique()
+        return len(unique_labels) == 1
