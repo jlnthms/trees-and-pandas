@@ -1,4 +1,4 @@
-from DecisionTree.question import Question
+from DecisionTree.utils import *
 from DecisionTree.utils import *
 from Dataset.dataset import Dataset
 
@@ -23,9 +23,13 @@ class Node:
             if impurity < min_gini:
                 min_gini, self.question = impurity, candidate_question
 
-    def split_data(self):
+    def split_data(self, depth, max_depth, min_samples):
         true_set, false_set = self.question.answer(self.subset)
-        self.true_child, self.false_child = Node(true_set), Node(false_set)
+
+        self.true_child = Leaf(true_set) if termination_criteria_met(true_set, depth, max_depth, min_samples) \
+            else Node(true_set)
+        self.false_child = Leaf(false_set) if termination_criteria_met(false_set, depth, max_depth, min_samples) \
+            else Node(false_set)
 
 
 class Leaf(Node):
@@ -33,4 +37,4 @@ class Leaf(Node):
         super().__init__(subset)
 
     def predict(self):
-        pass
+        return self.subset.data[self.subset.label].value_counts().idxmax()
