@@ -26,8 +26,7 @@ class Question:
         true_subset = pd.DataFrame(true_rows, columns=subset.data.columns).reset_index(drop=True)
         false_subset = pd.DataFrame(false_rows, columns=subset.data.columns).reset_index(drop=True)
 
-        return Dataset(true_subset, subset.label, subset.true_label), \
-               Dataset(false_subset, subset.label, subset.true_label)
+        return Dataset(true_subset, subset.label), Dataset(false_subset, subset.label)
 
     def __str__(self):
         return f"Is {self.feature} <= {self.threshold}?"
