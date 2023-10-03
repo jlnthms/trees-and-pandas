@@ -2,10 +2,9 @@ import pandas as pd
 
 
 class Dataset:
-    def __init__(self, data: pd.DataFrame, label: str, true_label):
+    def __init__(self, data: pd.DataFrame, label: str):
         self.data = data
         self.label = label
-        self.true_label = true_label
 
     def __len__(self):
         # number of rows
