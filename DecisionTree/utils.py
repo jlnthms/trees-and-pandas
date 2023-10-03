@@ -30,29 +30,30 @@ def greedy_search(subset: Dataset, feature: str):
 
 
 def gini_impurity(parent_set: Dataset, true_set: pd.DataFrame, false_set: pd.DataFrame):
-    # Calculate the proportions of true and false samples in each subset
+    classes = parent_set.data[parent_set.label].unique()
+
     true_set_size = len(true_set)
     false_set_size = len(false_set)
+    total_set_size = len(parent_set)
 
-    total_set_size = true_set_size + false_set_size
+    if false_set_size == 0 or true_set_size == 0:
+        return 1.0
 
-    # Calculate Gini impurity for the true set
-    if true_set_size == 0:
-        true_set_impurity = 0  # Avoid division by zero
-    else:
-        true_set_true_prob = len(true_set[true_set[parent_set.label] == parent_set.true_label]) / true_set_size
-        true_set_false_prob = 1 - true_set_true_prob
-        true_set_impurity = 1 - (true_set_true_prob ** 2 + true_set_false_prob ** 2)
+    true_class_probabilities = []
+    false_class_probabilities = []
 
-    # Calculate Gini impurity for the false set
-    if false_set_size == 0:
-        false_set_impurity = 0  # Avoid division by zero
-    else:
-        false_set_true_prob = len(false_set[false_set[parent_set.label] == parent_set.true_label]) / false_set_size
-        false_set_false_prob = 1 - false_set_true_prob
-        false_set_impurity = 1 - (false_set_true_prob ** 2 + false_set_false_prob ** 2)
+    for class_label in classes:
+        true_class_count = len(true_set[true_set[parent_set.label] == class_label])
+        true_class_probability = true_class_count / true_set_size
+        true_class_probabilities.append(true_class_probability)
 
-    # Calculate the weighted average Gini impurity
+        false_class_count = len(false_set[false_set[parent_set.label] == class_label])
+        false_class_probability = false_class_count / false_set_size
+        false_class_probabilities.append(false_class_probability)
+
+    true_set_impurity = 1 - sum(p ** 2 for p in true_class_probabilities)
+    false_set_impurity = 1 - sum(p ** 2 for p in false_class_probabilities)
+
     weighted_impurity = (true_set_size / total_set_size) * true_set_impurity + \
                         (false_set_size / total_set_size) * false_set_impurity
 
