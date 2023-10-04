@@ -1,3 +1,5 @@
+import pandas as pd
+
 from DecisionTree.node import *
 
 
@@ -21,6 +23,18 @@ class DecisionTree:
 
     def fit(self, max_depth=None, min_samples=None):
         self.build(self.root, max_depth=max_depth, min_samples=min_samples)
+
+    def predict(self, X: pd.DataFrame):
+        prediction_labels = []
+        for _, row in X.iterrows():
+            node = self.root
+            while not isinstance(node, Leaf):
+                if node.question.ask(row) == True:
+                    node = node.true_child
+                else:
+                    node = node.false_child
+            prediction_labels.append(node.predict())
+        return pd.DataFrame(prediction_labels)
 
     def print(self, node=None, indent=""):
         if node is None:
