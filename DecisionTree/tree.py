@@ -1,6 +1,9 @@
 import pandas as pd
+import pydotplus
+from IPython.display import Image
 
 from DecisionTree.node import *
+from DecisionTree.utils import to_dot
 
 
 class DecisionTree:
@@ -51,3 +54,12 @@ class DecisionTree:
         self.print(node.true_child, indent + "|   ")
         print(f"{indent}|   |--- False:")
         self.print(node.false_child, indent + "|   ")
+
+    def plot(self, save_path=None):
+        dot_data = to_dot(self.root)
+        graph = pydotplus.graph_from_dot_data(dot_data)
+
+        if save_path:
+            graph.write_png(save_path)
+        else:
+            return Image(graph.create_png())

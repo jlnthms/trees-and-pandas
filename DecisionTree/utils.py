@@ -1,6 +1,7 @@
 import pandas as pd
 
 from DecisionTree.question import Question
+from DecisionTree.node import Node, Leaf
 from Dataset.dataset import Dataset
 
 
@@ -58,3 +59,30 @@ def gini_impurity(parent_set: Dataset, true_set: pd.DataFrame, false_set: pd.Dat
                         (false_set_size / total_set_size) * false_set_impurity
 
     return weighted_impurity
+
+
+def to_dot(node: Node):
+    dot_data = "digraph DecisionTree {\n"
+    dot_data += "node [shape=box, style=\"filled\", fillcolor=\"lightblue\"];\n"
+    dot_data += _to_dot(node)
+    dot_data += "}\n"
+    return dot_data
+
+
+def _to_dot(self, node):
+    if isinstance(node, Leaf):
+        label = f"Class: {node.predict()}"
+    else:
+        label = str(node.question)
+
+    dot_data = f"\"{id(node)}\" [label=\"{label}\"];\n"
+
+    if node.true_child:
+        dot_data += f"\"{id(node)}\" -> \"{id(node.true_child)}\" [label=\"True\"];\n"
+        dot_data += self._to_dot(node.true_child)
+
+    if node.false_child:
+        dot_data += f"\"{id(node)}\" -> \"{id(node.false_child)}\" [label=\"False\"];\n"
+        dot_data += self._to_dot(node.false_child)
+
+    return dot_data

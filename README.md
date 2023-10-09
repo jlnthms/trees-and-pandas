@@ -38,6 +38,7 @@ To run this project, you'll need:
 - Python (3.7+ recommended)
 - Pandas
 - Jupyter (& additional dependencies)
+- Graphviz (for tree visualization)
 
 ### Installation
 
@@ -52,6 +53,27 @@ To run this project, you'll need:
 
    ```bash
    pip install -r requirements.txt
+   ```
+
+3. Install Graphviz executables (Optional)
+
+   For beautiful tree visualization, you need Graphviz executables running on your system alongside the
+   already installed python package.
+
+   For macOS users, simply run the following command:
+   ```bash
+   brew install graphviz
+   ```
+   
+   On Windows, download the latest release from:
+   ```bash
+   https://graphviz.org/download/
+   ```
+   [*The location of graphviz must be added to the system's PATH.*]
+   
+   Finally, on linux:
+   ```bash
+   sudo apt-get install graphviz
    ```
 
 ## Usage
