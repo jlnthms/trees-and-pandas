@@ -1,5 +1,5 @@
-from DecisionTree.utils import *
-from DecisionTree.utils import *
+from DecisionTree.utils import gini_impurity, greedy_search, termination_criteria_met
+from DecisionTree.question import Question
 from Dataset.dataset import Dataset
 
 

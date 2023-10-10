@@ -2,7 +2,8 @@ import pandas as pd
 import pydotplus
 from IPython.display import Image
 
-from DecisionTree.node import *
+from DecisionTree.node import Node, Leaf
+from Dataset.dataset import Dataset
 from DecisionTree.utils import to_dot
 
 
